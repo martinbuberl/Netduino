@@ -1,0 +1,9 @@
+*.suo
+*.user
+*.[Cc]ache
+*.docstates
+bin/
+obj/
+build/
+_ReSharper*/
+VersionInfo.cs
