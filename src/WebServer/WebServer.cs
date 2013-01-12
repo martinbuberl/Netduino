@@ -11,8 +11,9 @@ namespace Netduino.WebServer
 {
     public class WebServer
     {
-        private readonly Thread _thread;
         private readonly int _port;
+        private Thread _thread;
+        private Socket _listener;
 
         public WebServer(int port = 80)
         {
@@ -26,24 +27,58 @@ namespace Netduino.WebServer
             DebugHelper.NetworkInterface(networkInterface);
 
             _port = port;
-            _thread = new Thread(Start);
+        }
+
+        public bool IsAlive
+        {
+            get
+            {
+                return _thread.IsAlive;
+            }
+        }
+
+        public void Start()
+        {
+            _thread = new Thread(Listen);
             _thread.Start();
 
             Debug.Print("Started web server in thread '" + _thread.GetHashCode() + "'.");
         }
 
-        private void Start()
+        public void Stop()
         {
-            using (Socket listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            _listener.Close();
+            _thread.Abort();
+
+            Debug.Print("Stoped web server. Terminated thread '" + _thread.GetHashCode() + "'.");
+        }
+
+        public void Suspend()
+        {
+            _thread.Suspend();
+
+            Debug.Print("Suspended web server in thread '" + _thread.GetHashCode() + "'.");
+        }
+
+        public void Resume()
+        {
+            _thread.Resume();
+
+            Debug.Print("Resumed web server in thread '" + _thread.GetHashCode() + "'.");
+        }
+
+        private void Listen()
+        {
+            using (_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 IPEndPoint server = new IPEndPoint(IPAddress.Any, _port);
 
-                listenerSocket.Bind(server);
-                listenerSocket.Listen(1);
+                _listener.Bind(server);
+                _listener.Listen(1);
 
-                while (true)
+                while (true) // !done
                 {
-                    using (Socket connection = listenerSocket.Accept())
+                    using (Socket connection = _listener.Accept())
                     {
                         bool dataReady = connection.Poll(-1, SelectMode.SelectRead);
 
