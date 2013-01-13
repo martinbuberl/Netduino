@@ -7,3 +7,5 @@ obj/
 build/
 _ReSharper*/
 VersionInfo.cs
+OnBoardFlash.dat
+OnBoardFlash.dat.smd
