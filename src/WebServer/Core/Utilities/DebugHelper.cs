@@ -2,7 +2,7 @@ using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Net.NetworkInformation;
 
-namespace Netduino.WebServer.Utilities
+namespace Netduino.WebServer.Core.Utilities
 {
     public static class DebugHelper
     {

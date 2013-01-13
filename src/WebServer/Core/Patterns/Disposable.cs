@@ -1,6 +1,6 @@
 using System;
 
-namespace Netduino.WebServer.Patterns
+namespace Netduino.WebServer.Core.Patterns
 {
     public class Disposable : IDisposable
     {

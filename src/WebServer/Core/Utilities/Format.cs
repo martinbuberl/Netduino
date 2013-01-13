@@ -1,6 +1,6 @@
 using System;
 
-namespace Netduino.WebServer.Utilities
+namespace Netduino.WebServer.Core.Utilities
 {
     public static class Format
     {

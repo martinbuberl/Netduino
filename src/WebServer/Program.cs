@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Threading;
 using Microsoft.SPOT.Hardware;
+using Netduino.WebServer.Server;
 using SecretLabs.NETMF.Hardware.Netduino;
 
 namespace Netduino.WebServer
 {
     public class Program
     {
-        private static WebServer _webServer;
+        private static HttpServer _httpServer;
 
         public static void Main()
         {
-            _webServer = new WebServer();
-            _webServer.Start();
+            _httpServer = new HttpServer();
+            _httpServer.Start();
 
             // stop/start web server on button push
             InterruptPort button = new InterruptPort(Pins.ONBOARD_SW1, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeHigh);
@@ -23,13 +24,13 @@ namespace Netduino.WebServer
 
         static void button_OnInterrupt(uint data1, uint data2, DateTime time)
         {
-            if (_webServer.IsAlive)
+            if (_httpServer.IsAlive)
             {
-                _webServer.Stop();
+                _httpServer.Stop();
             }
             else
             {
-                _webServer.Start();
+                _httpServer.Start();
             }
         }
     }
