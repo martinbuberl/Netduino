@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using Netduino.WebServer.Core.Extensions;
@@ -38,6 +39,7 @@ namespace Netduino.WebServer.Server
                     string requestMessage = new String(Encoding.UTF8.GetChars(buffer));
 
                     ParseRequestMessage(requestMessage);
+                    HandleRequest();
                 }
 
                 _connection.Close();
@@ -86,7 +88,7 @@ namespace Netduino.WebServer.Server
 
                 // parse the headers e.g. 'Accept-Language: en'
                 int separator = requestMessageLine.IndexOf(':'); 
-                String headerName = requestMessageLine.Substring(0, separator);
+                string headerName = requestMessageLine.Substring(0, separator);
 
                 int pos = separator + 1;
                 while ((pos < requestMessageLine.Length) && (requestMessageLine[pos] == ' '))
@@ -106,6 +108,32 @@ namespace Netduino.WebServer.Server
 
                 Headers[headerName] = headerValue;
             }
+        }
+
+        public void HandleRequest()
+        {
+            byte[] responseBody = Encoding.UTF8.GetBytes(
+                "<html>" +
+                "<head>" +
+                "</head>" +
+                "<body>" +
+                "</body>" +
+                "</html>"
+                );
+
+            byte[] responseMessage = Encoding.UTF8.GetBytes(
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/html; charset=utf-8\r\n" +
+                "Content-Length: " + responseBody.Length + "\r\n" +
+                "Date: " + DateTime.Now.ToUniversalTime().ToString("R") + "\r\n\r\n" // RFC1123
+                );
+
+            // combine byte arrays
+            byte[] response = new byte[responseMessage.Length + responseBody.Length];
+            Array.Copy(responseMessage, 0, response, 0, responseMessage.Length);
+            Array.Copy(responseBody, 0, response, responseMessage.Length, responseBody.Length);
+
+            _connection.Send(response);
         }
     }
 
