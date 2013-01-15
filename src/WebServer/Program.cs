@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Microsoft.SPOT.Hardware;
+using Netduino.WebServer.Core.Utilities;
 using Netduino.WebServer.Server;
 using SecretLabs.NETMF.Hardware.Netduino;
 
@@ -12,6 +13,9 @@ namespace Netduino.WebServer
 
         public static void Main()
         {
+            // synchronize Netduino's local time with a time server (NTP)
+            SyncTime.Update("time.nist.gov", -5); // EST - Eastern Standard Time
+
             _httpServer = new HttpServer();
             _httpServer.Start();
 
