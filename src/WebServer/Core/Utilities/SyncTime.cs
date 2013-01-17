@@ -44,8 +44,6 @@ namespace Netduino.WebServer.Core.Utilities
 
                 return false;
             }
-
-            Debug.Print(String.Empty);
         }
 
         private static DateTime GetNtpTime(String timeServer, int timeZoneOffset)
