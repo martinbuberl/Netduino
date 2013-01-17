@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using Netduino.WebServer.Core.Extensions;
@@ -20,7 +19,7 @@ namespace Netduino.WebServer.Server
         public HttpMethod HttpMethod;
         public string HttpProtocol;
         public string RawUrl;
-        public string Url;
+        public Uri Url;
         public Hashtable Headers =  new Hashtable();
 
         public void Process()
@@ -39,7 +38,7 @@ namespace Netduino.WebServer.Server
                     string requestMessage = new String(Encoding.UTF8.GetChars(buffer));
 
                     ParseRequestMessage(requestMessage);
-                    HandleRequest();
+                    SendResponse();
                 }
 
                 _connection.Close();
@@ -102,7 +101,7 @@ namespace Netduino.WebServer.Server
                 switch (headerName.ToUpper())
                 {
                     case "HOST":
-                        Url = "http://" + headerValue + RawUrl;
+                        Url = new Uri("http://" + headerValue + RawUrl, UriKind.Absolute);
                         break;
                 }
 
@@ -110,7 +109,7 @@ namespace Netduino.WebServer.Server
             }
         }
 
-        public void HandleRequest()
+        public void SendResponse()
         {
             byte[] responseBody = Encoding.UTF8.GetBytes(
                 "<html>" +
