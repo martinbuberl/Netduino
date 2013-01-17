@@ -13,6 +13,7 @@ namespace Netduino.WebServer.Server
 
         private Thread _thread;
         private Socket _listener;
+        private bool _cancel;
 
         public HttpServer(int port = 80)
         {
@@ -33,6 +34,8 @@ namespace Netduino.WebServer.Server
 
         public void Start()
         {
+            _cancel = false;
+
             _thread = new Thread(Listen);
             _thread.Start();
 
@@ -56,7 +59,7 @@ namespace Netduino.WebServer.Server
                 _listener.Bind(server);
                 _listener.Listen(1);
 
-                while (true)
+                while (!_cancel)
                 {
                     Debug.Print(".");
 
