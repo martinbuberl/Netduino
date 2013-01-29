@@ -25,7 +25,7 @@ namespace Netduino.WebServer.Core.Utilities
 
             try
             {
-                var currentTime = GetNtpTime(timeServer, timeZoneOffset);
+                DateTime currentTime = GetNtpTime(timeServer, timeZoneOffset);
                 Microsoft.SPOT.Hardware.Utility.SetLocalTime(currentTime);
 
                 Debug.Print("Synchronization successfull:");

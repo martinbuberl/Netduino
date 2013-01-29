@@ -60,7 +60,7 @@ namespace Netduino.WebServer.Core.Extensions
 
             for (int i = 0; i < keyValues.Length; i++)
             {
-                var key = keyValues[i].Split('=');
+                string[] key = keyValues[i].Split('=');
 
                 if (key.Length > 1) {
                     queryStrings.Add(key[0], key[1]);

@@ -32,9 +32,18 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Core\Utilities\Converter.cs" />
+    <Compile Include="Core\Enums\DateTimeFormat.cs" />
+    <Compile Include="Core\Enums\HttpMethod.cs" />
+    <Compile Include="Core\Enums\NumeralSystem.cs" />
     <Compile Include="Core\Extensions\ExtensionAttribute.cs" />
     <Compile Include="Core\Extensions\StringExtensions.cs" />
     <Compile Include="Core\Extensions\UriExtensions.cs" />
+    <Compile Include="Core\Json\JsonParser.cs" />
+    <Compile Include="Core\Json\JsonPrimitives.cs" />
+    <Compile Include="Core\Json\PropertyTable.cs" />
+    <Compile Include="Core\Json\Serializer.cs" />
+    <Compile Include="Core\Utilities\Parser.cs" />
     <Compile Include="Core\Utilities\SyncTime.cs" />
     <Compile Include="Server\Request.cs" />
     <Compile Include="Core\Patterns\Disposable.cs" />

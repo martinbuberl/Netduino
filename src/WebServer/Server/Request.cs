@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Net.Sockets;
 using System.Text;
+using Netduino.WebServer.Core.Enums;
 using Netduino.WebServer.Core.Extensions;
 using Netduino.WebServer.Core.Patterns;
 
@@ -48,7 +49,7 @@ namespace Netduino.WebServer.Server
         public void ParseRequestMessage(string requestMessage)
         {
             // normalize the line endings
-            requestMessage = new StringBuilder(requestMessage).Replace("\r\n", "\r").ToString();
+            requestMessage = requestMessage.Replace("\r\n", "\r");
 
             string[] requestMessageLines = requestMessage.Split('\r');
 
@@ -134,14 +135,5 @@ namespace Netduino.WebServer.Server
 
             _connection.Send(response);
         }
-    }
-
-    /// <see href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" />
-    public enum HttpMethod
-    {
-        /// <summary>Represents an HTTP GET protocol method.</summary>
-        Get,
-        /// <summary>Represents an HTTP POST protocol method that is used to post a new entity as an addition to a URL.</summary>
-        Post
     }
 }
