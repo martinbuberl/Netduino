@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="Core\Extensions\ExtensionAttribute.cs" />
     <Compile Include="Core\Extensions\StringExtensions.cs" />
+    <Compile Include="Core\Extensions\UriExtensions.cs" />
     <Compile Include="Core\Utilities\SyncTime.cs" />
     <Compile Include="Server\Request.cs" />
     <Compile Include="Core\Patterns\Disposable.cs" />
