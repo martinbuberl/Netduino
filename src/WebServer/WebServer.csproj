@@ -43,6 +43,7 @@
     <Compile Include="Core\Json\JsonPrimitives.cs" />
     <Compile Include="Core\Json\PropertyTable.cs" />
     <Compile Include="Core\Json\Serializer.cs" />
+    <Compile Include="Core\Abstraction\DebugWrapper.cs" />
     <Compile Include="Core\Utilities\Parser.cs" />
     <Compile Include="Core\Utilities\SyncTime.cs" />
     <Compile Include="Server\Request.cs" />

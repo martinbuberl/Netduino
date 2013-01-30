@@ -4,7 +4,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using Microsoft.SPOT;
+using Netduino.WebServer.Core.Abstraction;
 using Netduino.WebServer.Core.Extensions;
 using Netduino.WebServer.Core.Utilities;
 
@@ -364,7 +364,7 @@ namespace Netduino.WebServer.Core.Json
                     tabs = tabs + " ";
                 }
 
-                Debug.Print(tabs + name + " : ");
+                DebugWrapper.Print(tabs + name + " : ");
 
                 if (d.Value is Hashtable)
                     DumpObjects(d.Value as Hashtable, level + 4);
@@ -375,7 +375,7 @@ namespace Netduino.WebServer.Core.Json
                 }
                 else
                 {
-                    Debug.Print(d.Value.ToString());
+                    DebugWrapper.Print(d.Value.ToString());
                 }
             }
 
@@ -395,7 +395,7 @@ namespace Netduino.WebServer.Core.Json
                 }
                 else
                 {
-                    Debug.Print(o.ToString());
+                    DebugWrapper.Print(o.ToString());
                 }
             }
         }

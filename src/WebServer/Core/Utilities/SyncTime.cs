@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using Microsoft.SPOT;
+using Netduino.WebServer.Core.Abstraction;
 
 namespace Netduino.WebServer.Core.Utilities
 {
@@ -16,31 +16,31 @@ namespace Netduino.WebServer.Core.Utilities
         /// <see href="http://www.jaypm.com/2011/09/setting-the-netduinos-datetime-automatically/" />
         public static bool Update(string timeServer, int timeZoneOffset)
         {
-            Debug.Print("Synchronize local time with NTP:");
-            Debug.Print(String.Empty);
-            Debug.Print("   NTP Address . . . . . . . . . . . : " + timeServer);
-            Debug.Print("   Time Zone Offset. . . . . . . . . : " + timeZoneOffset);
+            DebugWrapper.Print("Synchronize local time with NTP:");
+            DebugWrapper.Print(String.Empty);
+            DebugWrapper.Print("   NTP Address . . . . . . . . . . . : " + timeServer);
+            DebugWrapper.Print("   Time Zone Offset. . . . . . . . . : " + timeZoneOffset);
 
-            Debug.Print(String.Empty);
+            DebugWrapper.Print(String.Empty);
 
             try
             {
                 DateTime currentTime = GetNtpTime(timeServer, timeZoneOffset);
                 Microsoft.SPOT.Hardware.Utility.SetLocalTime(currentTime);
 
-                Debug.Print("Synchronization successfull:");
-                Debug.Print(String.Empty);
-                Debug.Print("   Local Time. . . . . . . . . . . . : " + DateTime.Now.ToUniversalTime().ToString("R"));
-                Debug.Print(String.Empty);
+                DebugWrapper.Print("Synchronization successfull:");
+                DebugWrapper.Print(String.Empty);
+                DebugWrapper.Print("   Local Time. . . . . . . . . . . . : " + DateTime.Now.ToUniversalTime().ToString("R"));
+                DebugWrapper.Print(String.Empty);
 
                 return true;
             }
             catch
             {
-                Debug.Print("Synchronization failed:");
-                Debug.Print(String.Empty);
-                Debug.Print("   Local Time. . . . . . . . . . . . : " + DateTime.Now.ToUniversalTime().ToString("R"));
-                Debug.Print(String.Empty);
+                DebugWrapper.Print("Synchronization failed:");
+                DebugWrapper.Print(String.Empty);
+                DebugWrapper.Print("   Local Time. . . . . . . . . . . . : " + DateTime.Now.ToUniversalTime().ToString("R"));
+                DebugWrapper.Print(String.Empty);
 
                 return false;
             }

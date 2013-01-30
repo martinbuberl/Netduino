@@ -511,11 +511,11 @@ namespace Netduino.WebServer.Core.Json
             {
                 success = SerializeNumber(Convert.ToDouble(value.ToString()), builder);
             }
-            else if ((value is Boolean) && ((Boolean) value == true))
+            else if ((value is Boolean) && ((Boolean) value))
             {
                 builder.Append("true");
             }
-            else if ((value is Boolean) && ((Boolean) value == false))
+            else if ((value is Boolean) && (!(Boolean) value))
             {
                 builder.Append("false");
             }
@@ -535,24 +535,25 @@ namespace Netduino.WebServer.Core.Json
             builder.Append("{");
 
             IEnumerator e = anObject.GetEnumerator();
-            //Hashtable e = anObject;
             bool first = true;
+
             while (e.MoveNext())
             {
-                DictionaryEntry d = e.Current as DictionaryEntry;
-                string key = d.Key.ToString();
-                object value = d.Value;
+                DictionaryEntry dictionaryEntry = e.Current as DictionaryEntry;
 
-                if (!first)
+                if (dictionaryEntry != null)
                 {
-                    builder.Append(", ");
-                }
+                    string key = dictionaryEntry.Key.ToString();
+                    object value = dictionaryEntry.Value;
 
-                SerializeString(key, builder);
-                builder.Append(":");
-                if (!SerializeValue(value, builder))
-                {
-                    return false;
+                    if (!first)
+                        builder.Append(", ");
+
+                    SerializeString(key, builder);
+                    builder.Append(":");
+
+                    if (!SerializeValue(value, builder))
+                        return false;
                 }
 
                 first = false;
@@ -585,6 +586,7 @@ namespace Netduino.WebServer.Core.Json
             }
 
             builder.Append("]");
+
             return true;
         }
 
@@ -593,9 +595,11 @@ namespace Netduino.WebServer.Core.Json
             builder.Append("\"");
 
             char[] charArray = aString.ToCharArray();
+
             for (int i = 0; i < charArray.Length; i++)
             {
                 char c = charArray[i];
+
                 if (c == '"')
                 {
                     builder.Append("\\\"");
@@ -627,6 +631,7 @@ namespace Netduino.WebServer.Core.Json
                 else
                 {
                     int codepoint = Convert.ToInt32(c.ToString());
+
                     if ((codepoint >= 32) && (codepoint <= 126))
                     {
                         builder.Append(c);

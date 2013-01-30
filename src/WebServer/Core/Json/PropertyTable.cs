@@ -2,9 +2,9 @@
 // http://www.tinyclr.com/codeshare/entry/357
 
 using System;
-using Microsoft.SPOT;
 using System.Collections;
 using System.Reflection;
+using Netduino.WebServer.Core.Abstraction;
 using Netduino.WebServer.Core.Extensions;
 using Netduino.WebServer.Core.Utilities;
 
@@ -50,13 +50,10 @@ namespace Netduino.WebServer.Core.Json
             _properties = new ArrayList();
             foreach (Assembly a in assemblies)
             {
-                if ((a.FullName.StartsWith("System")) ||
-                    (a.FullName.StartsWith("mscorlib")) ||
-                    (a.FullName.StartsWith("Microsoft.SPOT")))
-                {
+                if ((a.FullName.StartsWith("System")) || (a.FullName.StartsWith("mscorlib")) || (a.FullName.StartsWith("Microsoft.SPOT")))
                     continue;
-                }
-                Debug.Print("Adding " + a.FullName + " to the list");
+
+                DebugWrapper.Print("Adding " + a.FullName + " to the list");
                 Hashtable hash = GetProperties(a.GetTypes());
                 DumpObjects(hash, 0);
                 _properties.Add(hash);
@@ -119,8 +116,8 @@ namespace Netduino.WebServer.Core.Json
                         {
                             foreach (DictionaryEntry p in hashtable)
                             {
-                                Debug.Print("Comparing " + entry.Key + " to " + p.Key + " (" + e.Key +
-                                            ")");
+                                DebugWrapper.Print("Comparing " + entry.Key + " to " + p.Key + " (" + e.Key + ")");
+
                                 if (entry.Key.ToString() == p.Key.ToString())
                                 {
                                     // We could easily have matches across multiple Classes, because classes can often
@@ -164,6 +161,7 @@ namespace Netduino.WebServer.Core.Json
                     {
                         MethodInfo method = parentType.GetMethod("set_" + name);
                         method.Invoke(parent, new object[] {d});
+
                         break;
                     }
                 }
@@ -388,7 +386,7 @@ namespace Netduino.WebServer.Core.Json
                     tabs = tabs + " ";
                 }
 
-                Debug.Print(tabs + name + " : ");
+                DebugWrapper.Print(tabs + name + " : ");
 
                 if (d.Value is Hashtable)
                     DumpObjects(d.Value as Hashtable, level + 4);
@@ -399,7 +397,7 @@ namespace Netduino.WebServer.Core.Json
                 }
                 else
                 {
-                    Debug.Print(d.Value.ToString());
+                    DebugWrapper.Print(d.Value.ToString());
                 }
             }
 
@@ -419,7 +417,7 @@ namespace Netduino.WebServer.Core.Json
                 }
                 else
                 {
-                    Debug.Print(o.ToString());
+                    DebugWrapper.Print(o.ToString());
                 }
             }
         }
@@ -475,14 +473,14 @@ namespace Netduino.WebServer.Core.Json
         private Hashtable GetProperty(Type type)
         {
 
-            //Debug.Print("----------------------------------------------");
+            //DebugWrapper.Print("----------------------------------------------");
             //// Type dump
-            //Debug.Print("Name: " + t.Name);
-            //Debug.Print("    IsClass: " + t.IsClass);
-            //Debug.Print("    IsArray: " + t.IsArray);
-            //Debug.Print("    IsEnum: " + t.IsEnum);
-            //Debug.Print("    IsAbstract: " + t.IsAbstract);
-            //Debug.Print("");
+            //DebugWrapper.Print("Name: " + t.Name);
+            //DebugWrapper.Print("    IsClass: " + t.IsClass);
+            //DebugWrapper.Print("    IsArray: " + t.IsArray);
+            //DebugWrapper.Print("    IsEnum: " + t.IsEnum);
+            //DebugWrapper.Print("    IsAbstract: " + t.IsAbstract);
+            //DebugWrapper.Print("");
 
             // If it's a class, then it's something we care about
             if (type.IsClass)
@@ -492,15 +490,15 @@ namespace Netduino.WebServer.Core.Json
                 MethodInfo[] methods = type.GetMethods();
                 foreach (MethodInfo method in methods)
                 {
-                    //Debug.Print("        Name: " + method.Name);
-                    //Debug.Print("            IsVirtual: " + method.IsVirtual);
-                    //Debug.Print("            IsStatic: " + method.IsStatic);
-                    //Debug.Print("            IsPublic: " + method.IsPublic);
-                    //Debug.Print("            IsFinal: " + method.IsFinal);
-                    //Debug.Print("            IsAbstract: " + method.IsAbstract);
-                    //Debug.Print("            MemberType: " + method.MemberType);
-                    //Debug.Print("            DeclaringType: " + method.DeclaringType);
-                    //Debug.Print("            ReturnType: " + method.ReturnType);
+                    //DebugWrapper.Print("        Name: " + method.Name);
+                    //DebugWrapper.Print("            IsVirtual: " + method.IsVirtual);
+                    //DebugWrapper.Print("            IsStatic: " + method.IsStatic);
+                    //DebugWrapper.Print("            IsPublic: " + method.IsPublic);
+                    //DebugWrapper.Print("            IsFinal: " + method.IsFinal);
+                    //DebugWrapper.Print("            IsAbstract: " + method.IsAbstract);
+                    //DebugWrapper.Print("            MemberType: " + method.MemberType);
+                    //DebugWrapper.Print("            DeclaringType: " + method.DeclaringType);
+                    //DebugWrapper.Print("            ReturnType: " + method.ReturnType);
 
                     // If the Name.StartsWith "get_" and/or "set_",
                     // and it's not Abstract && not Virtual
@@ -563,10 +561,10 @@ namespace Netduino.WebServer.Core.Json
 
                         //foreach (object s in properties.Keys)
                         //{
-                        //    Debug.Print(s.ToString());
+                        //    DebugWrapper.Print(s.ToString());
                         //}
 
-                        Debug.Print("****************** " + method.ReturnType.ToString());
+                        DebugWrapper.Print("****************** " + method.ReturnType);
                         properties.Add(method.Name.Substring(4), method.ReturnType);
                     }
                 }

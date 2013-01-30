@@ -144,9 +144,9 @@ namespace Netduino.WebServer.Core.Utilities
                 }
                 else
                 {
-                    // ReSharper disable RedundantCast
+// ReSharper disable RedundantCast
                     result *= Math.Pow(10d, (double)expValue);
-                    // ReSharper restore RedundantCast
+// ReSharper restore RedundantCast
                 }
             }
             return true;

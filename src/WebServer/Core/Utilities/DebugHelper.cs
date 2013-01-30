@@ -1,6 +1,6 @@
 using System;
-using Microsoft.SPOT;
 using Microsoft.SPOT.Net.NetworkInformation;
+using Netduino.WebServer.Core.Abstraction;
 
 namespace Netduino.WebServer.Core.Utilities
 {
@@ -8,38 +8,38 @@ namespace Netduino.WebServer.Core.Utilities
     {
         public static void NetworkInterface(NetworkInterface networkInterface)
         {
-            Debug.Print(String.Empty);
+            DebugWrapper.Print(String.Empty);
 
             switch (networkInterface.NetworkInterfaceType)
             {
                 case NetworkInterfaceType.Ethernet:
-                    Debug.Print("Ethernet adapter:");
+                    DebugWrapper.Print("Ethernet adapter:");
                     break;
                 case NetworkInterfaceType.Wireless80211:
-                    Debug.Print("Wireless LAN adapter WI-FI:");
+                    DebugWrapper.Print("Wireless LAN adapter WI-FI:");
                     break;
                 default:
-                    Debug.Print("Unknown adapter:");
+                    DebugWrapper.Print("Unknown adapter:");
                     break;
             }
 
-            Debug.Print(String.Empty);
+            DebugWrapper.Print(String.Empty);
 
-            Debug.Print("   Physical Address. . . . . . . . . : " + Format.GetPhysicalAddress(networkInterface.PhysicalAddress));
-            Debug.Print("   DHCP Enabled. . . . . . . . . . . : " + Format.BoolToYesNo(networkInterface.IsDhcpEnabled));
-            Debug.Print("   IPv4 Address. . . . . . . . . . . : " + networkInterface.IPAddress);
-            Debug.Print("   Subnet Mask . . . . . . . . . . . : " + networkInterface.SubnetMask);
-            Debug.Print("   Default Gateway . . . . . . . . . : " + networkInterface.GatewayAddress);
+            DebugWrapper.Print("   Physical Address. . . . . . . . . : " + Format.GetPhysicalAddress(networkInterface.PhysicalAddress));
+            DebugWrapper.Print("   DHCP Enabled. . . . . . . . . . . : " + Format.BoolToYesNo(networkInterface.IsDhcpEnabled));
+            DebugWrapper.Print("   IPv4 Address. . . . . . . . . . . : " + networkInterface.IPAddress);
+            DebugWrapper.Print("   Subnet Mask . . . . . . . . . . . : " + networkInterface.SubnetMask);
+            DebugWrapper.Print("   Default Gateway . . . . . . . . . : " + networkInterface.GatewayAddress);
 
-            Debug.Print(String.Empty);
+            DebugWrapper.Print(String.Empty);
 
-            Debug.Print("   DNS Servers . . . . . . . . . . . : " + networkInterface.DnsAddresses[0]);
-            Debug.Print("   Dynamic DNS Enabled . . . . . . . : " + Format.BoolToYesNo(networkInterface.IsDynamicDnsEnabled));
+            DebugWrapper.Print("   DNS Servers . . . . . . . . . . . : " + networkInterface.DnsAddresses[0]);
+            DebugWrapper.Print("   Dynamic DNS Enabled . . . . . . . : " + Format.BoolToYesNo(networkInterface.IsDynamicDnsEnabled));
 
             if (networkInterface.DnsAddresses.Length > 1)
-                Debug.Print("                                       " + networkInterface.DnsAddresses[1]);
+                DebugWrapper.Print("                                       " + networkInterface.DnsAddresses[1]);
 
-            Debug.Print(String.Empty);
+            DebugWrapper.Print(String.Empty);
         }
     }
 }

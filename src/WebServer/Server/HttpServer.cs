@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Microsoft.SPOT;
 using Microsoft.SPOT.Net.NetworkInformation;
+using Netduino.WebServer.Core.Abstraction;
 using Netduino.WebServer.Core.Utilities;
 
 namespace Netduino.WebServer.Server
@@ -39,12 +39,12 @@ namespace Netduino.WebServer.Server
             _thread = new Thread(Listen);
             _thread.Start();
 
-            Debug.Print("Started web server. Thread ID: '" + _thread.ManagedThreadId + "'.");
+            DebugWrapper.Print("Started web server. Thread ID: '" + _thread.ManagedThreadId + "'.");
         }
 
         public void Stop()
         {
-            Debug.Print("Stopping web server. Thread ID: '" + _thread.ManagedThreadId + "'.");
+            DebugWrapper.Print("Stopping web server. Thread ID: '" + _thread.ManagedThreadId + "'.");
 
             _listener.Close();
             _thread.Abort();
@@ -61,7 +61,7 @@ namespace Netduino.WebServer.Server
 
                 while (!_cancel)
                 {
-                    Debug.Print(".");
+                    DebugWrapper.Print(".");
 
                     Request request = new Request(_listener.Accept());
                     Thread thread = new Thread(request.Process);
