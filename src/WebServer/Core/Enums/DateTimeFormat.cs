@@ -1,12 +1,13 @@
+using System;
+
 namespace Netduino.WebServer.Core.Enums
 {
-    /// <summary>
-    /// Enumeration of the popular formats of time and date within Json.
-    /// </summary>
+    [Flags]
     public enum DateTimeFormat
     {
         Unknown = 0,
-        Iso8601 = 1,
-        Ajax = 2
+
+        Iso8601 = 1 << 0,
+        Ajax = 1 << 1
     }
 }
