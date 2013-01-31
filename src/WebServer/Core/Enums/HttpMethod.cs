@@ -1,11 +1,17 @@
+using System;
+
 namespace Netduino.WebServer.Core.Enums
 {
-    /// <see href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" />
+    [Flags]
     public enum HttpMethod
     {
-        /// <summary>Represents an HTTP GET protocol method.</summary>
-        Get,
-        /// <summary>Represents an HTTP POST protocol method that is used to post a new entity as an addition to a URL.</summary>
-        Post
+        Unknown = 0,
+
+        /// <see href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" />
+        Get = 1 << 0,
+        Put = 1 << 1,
+        Post = 1 << 2,
+        Delete = 1 << 3,
+        Head = 1 << 4
     }
 }
