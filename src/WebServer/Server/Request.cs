@@ -67,13 +67,19 @@ namespace Netduino.WebServer.Server
                         case "GET":
                             HttpMethod = HttpMethod.Get;
                             break;
-                        case "POST":
-                            HttpMethod = HttpMethod.Post;
-                            break;
+                        // TODO, MB, 1/30/2013: Implement missing HTTP methods. Don't forget to update the 405 Allow params
+                        //case "PUT":
+                        //    HttpMethod = HttpMethod.Put;
+                        //    break;
+                        //case "POST":
+                        //    HttpMethod = HttpMethod.Post;
+                        //    break;
+                        //case "DELETE":
+                        //    HttpMethod = HttpMethod.Delete;
+                        //    break;
                         default:
-                            throw new NotImplementedException(
-                                "The HTTP protocol methods 'DELETE, HEAD, OPTIONS, PUT, TRACE' are not implemented."
-                                );
+                            HttpMethod = HttpMethod.Unknown;
+                            break;
                     }
 
                     RawUrl = requestLine[1];
@@ -91,6 +97,7 @@ namespace Netduino.WebServer.Server
                 string headerName = requestMessageLine.Substring(0, separator);
 
                 int pos = separator + 1;
+
                 while ((pos < requestMessageLine.Length) && (requestMessageLine[pos] == ' '))
                 {
                     pos++; // strip any spaces
@@ -102,7 +109,10 @@ namespace Netduino.WebServer.Server
                 switch (headerName.ToUpper())
                 {
                     case "HOST":
-                        Url = new Uri("http://" + headerValue + RawUrl, UriKind.Absolute);
+                        Url = new Uri(
+                            String.Concat("http://", headerValue, RawUrl).ToLower(), UriKind.Absolute
+                        );
+
                         break;
                 }
 
@@ -112,21 +122,25 @@ namespace Netduino.WebServer.Server
 
         public void SendResponse()
         {
-            byte[] responseBody = Encoding.UTF8.GetBytes(
-                "<html>" +
-                "<head>" +
-                "</head>" +
-                "<body>" +
-                "</body>" +
-                "</html>"
-                );
+            byte[] responseBody;
+            byte[] responseMessage;
 
-            byte[] responseMessage = Encoding.UTF8.GetBytes(
-                "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html; charset=utf-8\r\n" +
-                "Content-Length: " + responseBody.Length + "\r\n" +
-                "Date: " + DateTime.Now.ToUniversalTime().ToString("R") + "\r\n\r\n" // RFC1123
-                );
+            if (HttpMethod == HttpMethod.Unknown)
+            {
+                responseBody = GetResponseBody(405);
+                responseMessage = GetResponseMessage(405, responseBody);
+            }
+            else
+            {
+                // check if it was a REST API request
+                if (Url.Segments().Length > 1 && (Url.Segments()[1].ToLower() == "api" || Url.Segments()[1].ToLower() == "api/"))
+                {
+
+                }
+
+                responseBody = GetResponseBody(200);
+                responseMessage = GetResponseMessage(200, responseBody);
+            }
 
             // combine byte arrays
             byte[] response = new byte[responseMessage.Length + responseBody.Length];
@@ -134,6 +148,65 @@ namespace Netduino.WebServer.Server
             Array.Copy(responseBody, 0, response, responseMessage.Length, responseBody.Length);
 
             _connection.Send(response);
+        }
+
+        private static byte[] GetResponseBody(int statusCode)
+        {
+            string title = String.Empty;
+            string body = String.Empty;
+
+            switch (statusCode)
+            {
+                case 200:
+                    title = "HTTP Status 200";
+                    body = "OK";
+                    break;
+                case 405:
+                    title = "HTTP Error 405";
+                    body = "Method not allowed";
+                    break;
+            }
+
+            string responseBody = String.Concat(
+                "<!DOCTYPE html>",
+                "<html>",
+                "<head>",
+                "<meta charset=\"utf-8\">",
+                "<title>", title, "</title>",
+                "</head>",
+                "<body>", body, "</body>",
+                "</html>"
+                );
+
+            return Encoding.UTF8.GetBytes(responseBody);
+        }
+
+        private static byte[] GetResponseMessage(int statusCode, byte[] responseBody)
+        {
+            string responseMessage = String.Empty;
+
+            switch (statusCode)
+            {
+                case 200:
+                    responseMessage = String.Concat(
+                        "HTTP/1.1 200 OK\r\n",
+                        "Content-Type: text/html; charset=utf-8\r\n",
+                        "Content-Length: ", responseBody.Length, "\r\n",
+                        "Date: ", DateTime.Now.ToUniversalTime().ToString("R"), "\r\n\r\n" // RFC1123
+                        );
+                    break;
+                case 405:
+                    responseMessage = String.Concat(
+                        "HTTP/1.1 405 Method Not Allowed\r\n",
+                        "Allow: GET\r\n\r\n",
+                        "Content-Type: text/html; charset=utf-8\r\n",
+                        "Content-Length: ", responseBody.Length, "\r\n",
+                        "Date: ", DateTime.Now.ToUniversalTime().ToString("R"), "\r\n\r\n" // RFC1123
+                        );
+                    break;
+            }
+
+            return Encoding.UTF8.GetBytes(responseMessage);
         }
     }
 }
